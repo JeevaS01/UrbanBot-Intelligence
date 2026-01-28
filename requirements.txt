@@ -1,0 +1,26 @@
+
+# Web Framework & Interface
+flask
+markdown
+
+# Computer Vision & Image Processing
+ultralytics
+Pillow
+
+# Data Science & Machine Learning
+pandas
+numpy
+scikit-learn
+pickle5
+
+# AWS & Database
+boto3
+PyMySQL
+python-dotenv
+
+# AI Agents & LLM Framework (Phidata)
+phidata
+groq
+
+# Timezone Handling
+backports.zoneinfo

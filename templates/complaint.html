@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Citizen Complaint</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style2.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<style>
+   /* Core Theme Variables - Ensuring consistency with UrbanBot */
+:root {
+    --primary: #2563eb;
+    --secondary: #3b82f6;
+    --accent: #0ea5e9;
+    --deep-dark: #010817; /* Matches your custom gradient start */
+    --text-dark: #1e293b;
+    --text-muted: #64748b;
+    --bg-light: #f8fafc;
+    --white: #ffffff;
+    /* Updated Shadow: Deeper and wider for a premium feel */
+    --shadow: 0 20px 50px rgba(0, 0, 0, 0.08), 0 5px 15px rgba(0, 0, 0, 0.04);
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: var(--text-dark);
+    line-height: 1.6;
+   
+}
+
+/* Wider Container for a spacious layout */
+.container {
+    max-width: 1400px !important;
+}
+
+/* Updated Section Card: Wider padding and soft-depth shadow */
+.section-card {
+    background: var(--white);
+    border-radius: 24px;
+    padding: 35px;
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(226, 232, 240, 0.5);
+    height: 100%;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.section-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.12);
+}
+
+/* Input Fields Styling */
+.form-control {
+    background: var(--bg-light) !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 12px !important;
+    padding: 14px 18px; /* Slightly wider padding */
+    font-size: 0.95rem;
+    margin-bottom: 15px;
+}
+
+.form-control:focus {
+    background: var(--white) !important;
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1) !important;
+    outline: none;
+}
+
+label {
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+    display: block;
+}
+
+/* Prediction Result Display */
+.prediction-display {
+    background: linear-gradient(135deg, #010817, #0ea5e9);
+    color: white;
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 15px 35px rgba(14, 165, 233, 0.2);
+}
+
+.prediction-display h1 {
+    font-size: 4.5rem;
+    font-weight: 800;
+    margin: 10px 0;
+    letter-spacing: -2px;
+}
+
+.prediction-display .status-pill {
+    background: #fbbf24;
+    color: #000;
+    padding: 10px 30px;
+    border-radius: 50px;
+    font-weight: 800;
+    display: inline-block;
+    margin-top: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+/* Button Styling */
+.btn-predict {
+    background: linear-gradient(135deg, var(--primary), #3809c8); /* Updated to match your theme */
+    color: white;
+    border: none;
+    padding: 18px;
+    border-radius: 14px;
+    font-weight: 800;
+    font-size: 1rem;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 10px 20px rgba(56, 9, 200, 0.2);
+}
+
+.btn-predict:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 30px rgba(56, 9, 200, 0.4);
+    filter: brightness(1.1);
+    color: white;
+}
+
+/* Updated Hero Title: Custom Gradient requested */
+.hero-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 800;
+    font-size: 3.5rem;
+    margin-bottom: 12px;
+    letter-spacing: -1.5px;
+    
+    /* CUSTOM GRADIENT: Deep Night -> Sky Blue -> Electric Purple */
+    background: linear-gradient(135deg, #0a2257, #114dad, #1ba9d8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+}
+
+.hero-header {
+    text-align: center;
+    margin-bottom: 30px;
+    margin-top: 100px;
+    padding-top: 10px;   
+}
+
+.hero-subtitle {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    max-width: 650px;
+    margin: 0 auto;
+}
+
+/* New Section Header for Forecasting */
+.forecast-header {
+    margin-top: 60px;
+    margin-bottom: 30px;
+    padding-left: 20px;
+    border-left: 6px solid #0ea5e9;
+}
+
+.forecast-header h2 {
+    font-weight: 800;
+    font-size: 1.8rem;
+    color: #010817;
+    margin-bottom: 5px;
+}
+
+/* Map Frame Enhancements */
+#map-frame {
+    width: 100%;
+    height: 500px; /* Taller map */
+    border: none;
+    border-radius: 24px;
+}
+
+/* Table Enhancements */
+.table thead th {
+    background: #f1f5f9;
+    color: var(--text-dark);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 18px;
+    border: none;
+}
+
+/* Global Adjustments */
+.page-wrapper { 
+    margin-top: 90px; 
+    padding-bottom: 80px; 
+}
+
+.gradient-section {
+    background: radial-gradient(circle at top right, #ffffff, #f1f5f9);
+    min-height: 100vh;
+}
+
+
+/* NAVBAR STYLING */
+.navbar {
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    z-index: 1000;
+    background:linear-gradient(170deg, rgba(10, 40, 114, 0.593),rgba(135, 138, 139, 0.221), rgba(4, 112, 212, 0.678) );
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 15px 0;
+    bottom: 800px;
+    
+}
+
+.nav-container {
+    max-width: 1250px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    margin-left: 50px;
+    
+}
+
+.nav-logo {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text-dark);
+    margin-bottom: 15px;
+    
+}
+
+.nav-logo span {
+    color: var(--primary);
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 20px;
+    margin-top: 7px;
+    margin-left: 180px;  
+    margin-bottom: 15px; 
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-dark);
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: var(--primary);
+}
+
+/* Dark Horizontal Footer Style */
+.modern-footer {
+    background: #0f172a; 
+    color: #f8fafc;
+    padding: 80px 0 30px;
+    margin-top: 100px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px;
+}
+
+.footer-content-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 50px;
+    margin-bottom: 60px;
+}
+
+.footer-col {
+    flex: 1;
+}
+
+/* Centering the Brand Info */
+.brand-info {
+    flex: 2; 
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centers items horizontally */
+    text-align: center;  /* Centers text lines */
+}
+
+.footer-logo-centered {
+    font-size: 1.8rem; /* Slightly larger for emphasis */
+    font-weight: 800;
+    margin-bottom: 20px;
+}
+
+.footer-logo-centered span {
+    color: #38bdf8; 
+}
+
+.footer-description {
+    color: #94a3b8;
+    line-height: 1.7;
+    font-size: 0.95rem;
+    max-width: 450px; /* Increased for better centered look */
+}
+
+.footer-label {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.footer-nav {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-nav li {
+    margin-bottom: 12px;
+}
+
+.footer-nav a {
+    color: #94a3b8;
+    text-decoration: none;
+    transition: 0.3s;
+    font-size: 0.9rem;
+}
+
+.footer-nav a:hover {
+    color: #38bdf8;
+}
+
+.footer-socials {
+    display: flex;
+    gap: 20px;
+    margin-top: 25px;
+}
+
+.footer-socials a {
+    text-decoration: none;
+    font-size: 1.3rem;
+    transition: 0.3s;
+}
+
+.footer-socials a:hover {
+    transform: translateY(-3px);
+}
+
+.footer-bottom-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 30px;
+    border-top: 1px solid rgba(148, 163, 184, 0.1);
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+.heart { color: #ef4444; }
+.dev-credits strong { color: #cbd5e1; }
+
+@media (max-width: 992px) {
+    .footer-content-row {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .footer-col {
+        margin-bottom: 40px;
+    }
+}
+
+
+/* Custom Toast Styling */
+.custom-toast {
+    background: linear-gradient(135deg, #2563eb, #0ea5e9); /* Gradient Blue */
+    color: white;
+    padding: 16px 24px;
+    border-radius: 16px;
+    margin-bottom: 10px;
+    box-shadow: 0 10px 25px rgba(14, 165, 233, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    min-width: 300px;
+    top: 20px;          /* Distance from top */
+    right: 20px;
+
+    /* Animation Properties */
+    animation: slideInRight 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+    transition: all 0.5s ease;
+}
+
+.custom-toast.hide {
+    animation: slideOutRight 0.5s ease forwards;
+}
+
+/* Animations */
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+.toast-content {
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+/* Progress bar at the bottom of the toast */
+.toast-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.5);
+    width: 100%;
+    border-bottom-left-radius: 16px;
+    animation: progressLoad 4s linear forwards;
+}
+
+@keyframes progressLoad {
+    from { width: 100%; }
+    to { width: 0%; }
+}
+
+/* Ensure the toast has relative positioning for the progress bar */
+.custom-toast {
+    position: relative;
+    overflow: hidden;
+    /* ... rest of your existing custom-toast CSS ... */
+}
+
+/* Custom Sentiment Colors */
+.text-success {
+    color: #10b981 !important; /* Modern Emerald Green */
+}
+
+.text-danger {
+    color: #ef4444 !important; /* Modern Soft Red */
+}
+
+.text-warning {
+    color: #f59e0b !important; /* Amber for Neutral */
+}
+
+/* Optional: Make the text stand out with a subtle glow */
+.fw-bold.text-success, .fw-bold.text-danger {
+    letter-spacing: 0.5px;
+    font-size: 0.9rem;
+}
+
+
+/* Make priority badges look cleaner */
+.badge.bg-danger { background-color: #fee2e2 !important; color: #ef4444 !important; border: 1px solid #fecaca; }
+.badge.bg-secondary { background-color: #f1f5f9 !important; color: #64748b !important; border: 1px solid #e2e8f0; }
+
+/* Table hover effect */
+.table-hover tbody tr:hover {
+    background-color: #f8fafc;
+    transition: 0.2s;
+}
+
+
+
+/* Ensure all main cards have a nice uniform feel */
+.dashboard-card {
+    min-height: 580px; /* Matches the height of the right-side stack */
+}
+
+/* Control the size of the chart box */
+.chart-box {
+    height: 220px;
+    padding: 20px !important;
+}
+
+.chart-container {
+    position: relative;
+    height: 140px; /* Strict height for the canvas */
+    width: 100%;
+}
+
+/* Control the size of the table box */
+.table-box {
+    height: 340px;
+    padding: 20px !important;
+}
+
+.table-box .table-responsive {
+    height: 250px; /* Limits the table height */
+    overflow-y: auto; /* Adds scrollbar inside the box */
+}
+
+/* Scrollbar Styling for a premium look */
+.table-responsive::-webkit-scrollbar {
+    width: 6px;
+}
+.table-responsive::-webkit-scrollbar-thumb {
+    background: #e2e8f0;
+    border-radius: 10px;
+}
+
+.sentiment-hero-box {
+    background: #ffffff;
+    border-radius: 30px;
+    padding: 40px !important;
+    border-bottom: 8px solid #2563eb;
+}
+
+.hero-chart-title {
+    color: #1e1b4b;
+    font-weight: 800;
+    font-size: 1.6rem;
+}
+
+.progress {
+    height: 12px;
+    border-radius: 20px;
+    background-color: #f1f5f9;
+}
+
+.gauge-label {
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.border-start {
+    border-color: #f1f5f9 !important;
+}
+</style>
+</head>
+
+<body class="gradient-section">
+
+    <nav class="navbar">
+    <div class="nav-container">
+        <div class="nav-logo">UrbanBot<span>.AI</span></div>
+        <ul class="nav-links">
+            <li><a href="{{ url_for('intro2') }}">🏠 Home</a></li>
+            <li><a href="{{ url_for('dashboard') }}">📊 Dashboard</a></li>
+            
+            <li class="dropdown">
+                <a href="#" class="dropbtn">🔍 Monitoring <i class="chevron"></i></a>
+                <div class="dropdown-content">
+                    <a href="{{ url_for('traffic') }}">🚦 Traffic Detection</a>                  
+                    <a href="{{ url_for('accident') }}">🚨 Accident Detection</a>
+                    <a href="{{ url_for('pothole') }}">🕳️ Pothole Detection</a>
+                    <a href="{{ url_for('crowd') }}">👥 Crowd Detection</a>
+                </div>
+            </li>
+
+            <li><a href="{{ url_for('citizen_complaint') }}">📝 Citizen Complaint</a></li>
+            <li><a href="{{ url_for('air_quality') }}">🌬️ Air Quality</a></li>
+            <li><a href="{{ url_for('chat_page') }}">💬 Chat With AI</a></li>
+            <li><a href="{{ url_for('about_me') }}">👨‍💻 About Me</a></li>
+        </ul>
+        <div class="nav-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+    </nav>
+
+
+
+
+<div class="container page-wrapper">
+    <div class="hero-header" data-aos="fade-down">
+        <h1 class="hero-title">Citizen <span>Complaint</span> AI</h1>
+        <p class="hero-subtitle">Automated sentiment analysis and priority routing for smart cities.</p>
+    </div>
+    <div class="toast-container position-fixed end-0 p-3" style="z-index: 9999; top: 100px;">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div class="custom-toast show" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-content">
+                    <i class="fas fa-check-circle me-2"></i>
+                    <span>{{ message }}</span>
+                </div>
+                <div class="toast-progress"></div>
+            </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    </div>
+    
+    <div class="row g-4">
+        <div class="col-lg-6" data-aos="fade-right">
+            <div class="section-card">
+                <h4 class="fw-bold mb-4"><i class="fas fa-file-signature me-2 text-primary"></i> Register Issue</h4>
+                <p class="text-muted small mb-4">Submit your complaint and let our AI analyze its sentiment and urgency.</p>
+                <form action="/citizen_complaint" method="POST" id="complaintForm">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>City</label>
+                            <input type="text" name="city" class="form-control" placeholder="City Name" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Category</label>
+                            <select name="category" class="form-control">
+                                <option value="Road">Road/Pothole</option>
+                                <option value="Water">Water Supply</option>
+                                <option value="Lighting">Street Lighting</option>
+                                <option value="Pollution">Pollution</option>
+                                <option value="Traffic">Traffic</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Latitude</label>
+                            <input type="text" id="lat" name="latitude" class="form-control" placeholder="Enter Latitude">
+                        </div>
+                        <div class="col-md-6">
+                            <label>Longitude</label>
+                            <input type="text" id="lon" name="longitude" class="form-control" placeholder="Enter Longitude">
+                        </div>
+                    </div>
+
+                    <label>Priority</label>
+                    <div class="d-flex gap-3 mb-3">
+                        <select name="priority" class="form-control">
+                            <option value="low">Low Priority</option>
+                            <option value="medium">Medium Priority</option>
+                            <option value="high">High Priority</option>
+                        </select>
+                    </div>
+
+                    <label>Complaint Description</label>
+                    <textarea name="complaint_text" class="form-control" rows="4" placeholder="Briefly describe the issue..."></textarea>
+                    
+                    <button type="submit" class="btn-predict w-100 mt-3">Submit AI Analysis</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="col-lg-6" data-aos="fade-left">
+            <div class="section-card">
+                <h5 class="fw-bold mb-3"><i class="fas fa-database me-2 text-primary"></i> Live RDS Complaint Logs</h5>
+                <div class="table-responsive" style="max-height: 450px;">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light sticky-top">
+                            <tr><th>Category</th><th>Sentiment</th><th>Priority</th></tr>
+                        </thead>
+                        <tbody id="complaintTableBody">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container mb-5">
+    <div class="section-card sentiment-hero-box">
+        <div class="row align-items-center">
+            <div class="col-md-7">
+                <h3 class="hero-chart-title">Overall Citizen Sentiment - Realtime Analysis 📊</h3>
+                 <p class="text-muted small mb-4">Real-time tracking of citizen-reported friction across various service departments.</p>
+                <div class="sentiment-bar-container mt-4">
+                    <div class="d-flex justify-content-between mb-1"><span class="fw-bold">Positive</span><span id="pos-per">0%</span></div>
+                    <div class="progress mb-3"><div id="bar-pos" class="progress-bar bg-success" style="width: 0%"></div></div>
+                    
+                    <div class="d-flex justify-content-between mb-1"><span class="fw-bold">Neutral</span><span id="neu-per">0%</span></div>
+                    <div class="progress mb-3"><div id="bar-neu" class="progress-bar bg-warning" style="width: 0%"></div></div>
+                    
+                    <div class="d-flex justify-content-between mb-1"><span class="fw-bold">Negative</span><span id="neg-per">0%</span></div>
+                    <div class="progress"><div id="bar-neg" class="progress-bar bg-danger" style="width: 0%"></div></div>
+                </div>
+            </div>
+
+            <div class="col-md-5 text-center border-start">
+                 <h4 class="fw-bold text-dark">Community Sentiment Index</h4>
+                <p class="text-muted small px-3">Aggregate city health score derived from AI-driven sentiment analysis.</p>
+                <div style="height: 180px; position: relative;">
+                    <canvas id="gaugeChart" style="width: 100%; height: 100%;"></canvas> 
+                    <div class="gauge-label" style="position: absolute; top: 65%; left: 50%; transform: translate(-50%, -50%);">
+                        <h2 id="index-score" class="mb-0">32</h2>
+                        <small class="text-muted">/100 Index</small>
+                    </div>
+                </div>
+                <p id="pulse-text" class="fw-bold mt-2" style="color: #ef4444;">City's Pulse is Critical 😟</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="modern-footer">
+    <div class="footer-container">
+        <div class="footer-content-row">
+            <div class="footer-col brand-info">
+                <div class="footer-logo-centered">UrbanBot<span>.AI</span></div>
+                <p class="footer-description">
+                    Empowering smart cities with real-time AI-driven traffic, Accident, Infrastructure and crowd insights for a safer, smoother urban experience.
+                </p>
+                <div class="footer-socials">
+                    <a href="#">🌐</a>
+                    <a href="#">🐦</a>
+                    <a href="#">💼</a>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h4 class="footer-label">Services</h4>
+                <ul class="footer-nav">
+                    <li><a href="#">Analysis (Traffic,Accident,Infrastructure)</a></li>
+                    <li><a href="#">Emergency Alerts</a></li>
+                    <li><a href="#">Crowd Monitoring</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4 class="footer-label">Support</h4>
+                <ul class="footer-nav">
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">System Status</a></li>
+                    <li><a href="#">API Reference</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom-bar">
+            <div class="copyright">
+                © 2026 UrbanBot Intelligence. All Rights Reserved.
+            </div>
+            <div class="dev-credits">
+                Built with <span class="heart"> ❤ </span> by <strong> 91jeevanick@gmail.com</strong>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script>
+    
+    AOS.init({ duration: 1000, once: true });
+
+    let sentimentChart; 
+    let gaugeChart;
+
+    async function updateDashboard() {
+    try {
+        const response = await fetch('/api/complaint_history'); 
+        const data = await response.json();
+        
+        // DEBUG: Press F12 in your browser and check 'Console' to see if data is here
+        console.log("Data received from API:", data);
+
+        const tableBody = document.getElementById('complaintTableBody');
+        if (!tableBody) return;
+
+        // 1. Update Counter
+        const counter = document.getElementById('total-count');
+        if (counter) counter.innerText = `${data.length} Recent Complaints`;
+        
+        // 2. Clear Table
+        tableBody.innerHTML = ''; 
+
+        if (data.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="3" class="text-center text-muted">No complaints found.</td></tr>';
+            return;
+        }
+
+        let counts = { Positive: 0, Negative: 0, Neutral: 0 };
+
+        data.forEach(log => {
+            // Force values to strings and handle potential nulls
+            const cat = log.category || "General";
+            const sent = log.sentiment || "Neutral";
+            const prio = (log.priority || "low").toLowerCase(); // Normalize to lowercase for comparison
+
+            // Increment stats
+            if (counts.hasOwnProperty(sent)) {
+                counts[sent]++;
+            }
+
+            // Sentiment Styling
+            let sentimentClass = sent === 'Positive' ? 'text-success' : 
+                                (sent === 'Negative' ? 'text-danger' : 'text-warning');
+            
+            let icon = sent === 'Positive' ? 'fa-smile' : 
+                    (sent === 'Negative' ? 'fa-frown' : 'fa-meh');
+
+            // --- PRIORITY COLOR LOGIC ---
+            let priorityBadgeClass = "";
+            if (prio === 'high') {
+                priorityBadgeClass = "bg-danger";      // Red
+            } else if (prio === 'medium') {
+                priorityBadgeClass = "bg-warning text-dark"; // Yellow (with dark text for readability)
+            } else {
+                priorityBadgeClass = "bg-info text-dark";    // Light Blue (for Low)
+            }
+
+            const row = `
+                <tr>
+                    <td><strong>${cat}</strong></td>
+                    <td>
+                        <span class="fw-bold ${sentimentClass}">
+                            <i class="fas ${icon} me-1"></i> ${sent}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge ${priorityBadgeClass} text-uppercase px-3 py-2" style="border-radius: 8px;">
+                            ${prio}
+                        </span>
+                    </td>
+                </tr>`;
+            tableBody.innerHTML += row;
+        });
+
+        // Update Charts
+        updateVisuals(data.length, counts);
+
+    } catch (e) { 
+        console.error("Dashboard Refresh Error:", e); 
+    }
+}
+
+    function updateVisuals(total, counts) {
+        // Calculate Percentages
+        let posP = Math.round((counts.Positive / total) * 100) || 0;
+        let neuP = Math.round((counts.Neutral / total) * 100) || 0;
+        let negP = Math.round((counts.Negative / total) * 100) || 0;
+
+        // Update Progress Bars
+        document.getElementById('bar-pos').style.width = posP + '%';
+        document.getElementById('pos-per').innerText = posP + '%';
+        document.getElementById('bar-neu').style.width = neuP + '%';
+        document.getElementById('neu-per').innerText = neuP + '%';
+        document.getElementById('bar-neg').style.width = negP + '%';
+        document.getElementById('neg-per').innerText = negP + '%';
+
+        // Update Gauge Score
+        let score = Math.round(((counts.Positive * 100) + (counts.Neutral * 50)) / total) || 0;
+        document.getElementById('index-score').innerText = score;
+
+        // Update Pulse Text
+        let pulse = document.getElementById('pulse-text');
+        if (score > 70) { pulse.innerText = "City's Pulse is Healthy 😊"; pulse.style.color = "#10b981"; }
+        else if (score > 40) { pulse.innerText = "City's Pulse is Stable 😐"; pulse.style.color = "#f59e0b"; }
+        else { pulse.innerText = "City's Pulse is Critical 😟"; pulse.style.color = "#ef4444"; }
+
+        renderCharts(counts, score);
+    }
+
+    function renderCharts(counts, score) {
+    // 1. Horizontal Bar Chart (Check if element exists first)
+            const barEl = document.getElementById('sentimentChart');
+            if (barEl) {
+                const ctxBar = barEl.getContext('2d');
+                if (sentimentChart) sentimentChart.destroy();
+                sentimentChart = new Chart(ctxBar, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Positive', 'Neutral', 'Negative'],
+                        datasets: [{
+                            data: [counts.Positive, counts.Neutral, counts.Negative],
+                            backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
+                            borderRadius: 8
+                        }]
+                    },
+                    options: { 
+                        indexAxis: 'y', 
+                        responsive: true, 
+                        maintainAspectRatio: false, 
+                        plugins: { legend: { display: false } }, 
+                        scales: { x: { display: false }, y: { grid: { display: false } } } 
+                    }
+                });
+            }
+
+            // 2. Gauge Chart (The Hero Index Visual)
+            const gaugeEl = document.getElementById('gaugeChart');
+            if (gaugeEl) {
+                const ctxGauge = gaugeEl.getContext('2d');
+                if (gaugeChart) gaugeChart.destroy();
+                
+                gaugeChart = new Chart(ctxGauge, {
+                    type: 'doughnut',
+                    data: {
+                        datasets: [{
+                            data: [score, 100 - score],
+                            backgroundColor: [
+                                score > 70 ? '#10b981' : (score > 40 ? '#f59e0b' : '#ef4444'), 
+                                '#f1f5f9'
+                            ],
+                            borderWidth: 0,
+                            circumference: 180, 
+                            rotation: 270,      
+                            borderRadius: 10
+                        }]
+                    },
+                    options: {
+                        cutout: '85%', 
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { 
+                            legend: { display: false }, 
+                            tooltip: { enabled: false } 
+                        }
+                    }
+                });
+            } else {
+                console.error("Could not find gaugeChart canvas element!");
+            }
+        }
+
+    // Initialize Page
+    document.addEventListener('DOMContentLoaded', () => {
+        updateDashboard();
+        setInterval(updateDashboard, 5000);
+        // Toast Handler
+        const toasts = document.querySelectorAll('.custom-toast');
+        toasts.forEach(toast => {
+            setTimeout(() => {
+                toast.classList.add('hide');
+                setTimeout(() => { toast.remove(); }, 500); 
+            }, 8000);
+        });
+    });
+
+</script>
+</body>
+</html>

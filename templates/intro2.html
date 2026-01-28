@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UrbanBot Intelligence | Smart City Platform</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='style2.css') }}">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+    <div class="nav-container">
+        <div class="nav-logo">UrbanBot<span>.AI</span></div>
+        <ul class="nav-links">
+            <li><a href="{{ url_for('intro2') }}">🏠 Home</a></li>
+            <li><a href="{{ url_for('dashboard') }}">📊 Dashboard</a></li>
+            
+            <li class="dropdown">
+                <a href="#" class="dropbtn">🔍 Monitoring <i class="chevron"></i></a>
+                <div class="dropdown-content">
+                    <a href="{{ url_for('traffic') }}">🚦 Traffic Detection</a>
+                    <a href="{{ url_for('crowd') }}">👥 Crowd Detection</a>
+                    <a href="{{ url_for('accident') }}">🚨 Accident Detection</a>
+                    <a href="{{ url_for('pothole') }}">🕳️ Pothole Detection</a>                  
+                </div>
+            </li>
+
+            <li><a href="{{ url_for('citizen_complaint') }}">📝 Citizen Complaint</a></li>
+            <li><a href="{{ url_for('air_quality') }}">🌬️ Air Quality</a></li>
+            <li><a href="{{ url_for('chat_page') }}">💬 Chat With AI</a></li>
+            <li><a href="{{ url_for('about_me') }}">👨‍💻 About Me</a></li>
+        </ul>
+        <div class="nav-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+    </nav>
+
+    <header class="hero">
+        <div class="container" data-aos="fade-down">
+            <div class="badge">Next-Gen Urban Analytics</div>
+            <h1 class="hero-title">UrbanBot Intelligence</h1>
+            <p class="hero-subtitle">A Smart City Analytics Platform leveraging Machine Learning and RAG for Traffic, Infrastructure, and Environmental Monitoring.</p>
+            <div class="tag-container">
+                <span class="skill-tag">YOLOv8</span>
+                <span class="skill-tag">NLP</span>
+                <span class="skill-tag">Multi-Agent AI</span>
+                <span class="skill-tag">AWS Cloud</span>              
+            </div>
+        </div>
+    </header>
+
+    <section class="container">
+        <h2 class="section-heading" data-aos="fade-up">Core Capabilities</h2>
+        <div class="grid">
+            <div class="card" data-aos="fade-up" data-aos-delay="100">
+                <div class="icon">👁️</div>
+                <h3>Computer Vision</h3>
+                <p>Real-time detection of potholes, road cracks, and accidents using YOLOv8 and CNN density estimation.</p>
+            </div>
+            <div class="card" data-aos="fade-up" data-aos-delay="200">
+                <div class="icon">📈</div>
+                <h3>Forecasting</h3>
+                <p>Time-series analysis using RDS Data and Live Air Quality Index and traffic congestion prediction.</p>
+            </div>
+            <div class="card" data-aos="fade-up" data-aos-delay="300">
+                <div class="icon">🤖</div>
+                <h3>Agentic RAG</h3>
+                <p>LLM-powered agents that automate email alerts, technical reports, and SQL database queries.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="gradient-section">
+        <div class="container">
+            <h2 class="section-heading" data-aos="fade-right">Cloud Infrastructure</h2>
+            <div class="card wide-card" data-aos="zoom-in">
+                <p>The platform is architected on <strong>AWS</strong> for scalability:</p>
+                <div class="grid-two">
+                    <ul class="check-list">
+                        <li><strong>S3:</strong> Dataset and Model storage.</li>
+                        <li><strong>RDS:</strong> Structured metrics and SQL data.</li>
+                    </ul>
+                    <ul class="check-list">
+                        <li><strong>EC2:</strong> High-performance inference backend.</li>
+                        <li><strong>SMTP:</strong> Automated citizen & emergency alerts.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<section class="container">
+    <h2 class="section-title" data-aos="fade-up">Platform Intelligence</h2>
+
+    <div class="featured-row">
+        <div class="module-card" data-aos="fade-right">
+            <div class="img-container">
+                <img src="{{ url_for('static', filename='images/db2.png') }}" alt="Dashboard">
+            </div>
+            <div class="card-body">
+                <span class="tag">CENTRAL HUB</span>
+                <h3>Urban Intelligence Dashboard</h3>
+                <p>The central nervous system of the platform. It visualizes critical urban performance indicators, active alerts, and real-time city health metrics through an intuitive, data-driven interface.</p>
+            </div>
+        </div>
+         <div class="module-card" data-aos="fade-up">
+            <div class="img-container"><img src="{{ url_for('static', filename='images/aqi.png') }}"></div>
+            <div class="card-body">
+                <span class="tag">ENVIRONMENT</span>
+                <h3>Predictive AQI Analytics</h3>
+                <p>Environmental health monitoring. This module analyzes pollutant composition (PM2.5, NO2) and uses predictive modeling to forecast air quality levels for the next 24 hours.</p>
+            </div>
+        </div>
+        
+    </div>
+
+    <div class="featured-row">
+        
+        <div class="module-card" data-aos="fade-up">
+            <div class="img-container"><img src="{{ url_for('static', filename='images/ph.png') }}"></div>
+            <div class="card-body">
+                <span class="tag">INFRASTRUCTURE</span>
+                <h3>Infrastructure Maintenance AI</h3>
+                <p>Automated pothole detection using deep learning models. This module identifies road damage from mobile feeds and logs coordinates directly into the city maintenance database.</p>
+            </div>
+        </div>
+
+        <div class="module-card" data-aos="fade-up">
+            <div class="img-container"><img src="{{ url_for('static', filename='images/tf.png') }}"></div>
+            <div class="card-body">
+                <span class="tag">TRAFFIC</span>
+                <h3>Traffic Congestion Monitoring</h3>
+                <p>Intelligent vehicle classification and flow analysis. By identifying vehicle types and density, the AI optimizes traffic signals to reduce urban idle times.</p>
+            </div>
+        </div>
+
+        <div class="module-card" data-aos="fade-up">
+            <div class="img-container"><img src="{{ url_for('static', filename='images/acc.png') }}"></div>
+            <div class="card-body">
+                <span class="tag">EMERGENCY</span>
+                <h3>Emergency Response: Accident Detection</h3>
+                <p>Critical event detection system. Automatically recognizes road accidents and categorizes severity, enabling emergency services to respond up to 40% faster.</p>
+            </div>
+        </div>
+
+        <div class="module-card" data-aos="fade-up">
+            <div class="img-container"><img src="{{ url_for('static', filename='images/ai.png') }}"></div>
+            <div class="card-body">
+                <span class="tag">AGENTIC RAG</span>
+                <h3>Multi-Agent Intelligence (GPT-OSS)</h3>
+                <p>An LLM-powered assistant with direct database access. Administrators can generate complex SQL reports and city summaries using simple natural language queries.</p>
+            </div>
+        </div>
+
+       
+
+        <div class="module-card" data-aos="fade-left">
+            <div class="img-container">
+                <img src="{{ url_for('static', filename='images/crowd.png') }}" alt="Crowd">
+            </div>
+            <div class="card-body">
+                <span class="tag">VISION AI</span>
+                <h3>Crowd Analysis System</h3>
+                <p>Advanced computer vision for urban density management. Analyzes human flow in public transit hubs to predict congestion levels and trigger automated safety notifications.</p>
+            </div>
+        </div>
+
+        <div class="module-card" data-aos="fade-up">
+            <div class="img-container"><img src="{{ url_for('static', filename='images/com.png') }}"></div>
+            <div class="card-body">
+                <span class="tag">NLP</span>
+                <h3>Sentiment-Driven Complaint AI</h3>
+                <p>Automating citizen feedback loop. Uses NLTK for sentiment analysis and priority-based routing, ensuring that the most urgent infrastructure issues are addressed first.</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+    <section class="container">
+        <h2 class="section-heading" data-aos="fade-up">Project Evaluation Metrics</h2>
+        <div class="grid">
+            <div class="card result-card" data-aos="zoom-in" data-aos-delay="100">
+                <span class="metric-value">74.2%</span>
+                <h4>Detection mAP</h4>
+                <p>Mean Average Precision for YOLOv8 across Accidents, Potholes, Crowd and Traffic.</p>
+            </div>
+            <div class="card result-card" data-aos="zoom-in" data-aos-delay="200">
+                <span class="metric-value">0.71</span>
+                <h4>AQI R2</h4>
+                <p> Using RandomForest Model With High Accuracy.</p>
+            </div>
+            <div class="card result-card" data-aos="zoom-in" data-aos-delay="300">
+                <span class="metric-value">&lt; 2s</span>
+                <h4>Inference Speed</h4>
+                <p>Average latency for processing high-resolution urban frames on AWS EC2.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="gradient-section">
+        <div class="container">
+            <div class="grid-two-equal">
+                <div class="card" data-aos="fade-right">
+                    <h3>Citizen ComplaintsSentiment Analysis</h3>
+                    <p>Our NLP engine processes feedback And Alert Service Requests to prioritize urban maintenance.</p>
+                    <div class="sentiment-bar">
+                        <div class="bar-fill positive" style="width: 65%;"></div>
+                    </div>
+                    <small>65% Positive Feedback on Infrastructure Repairs</small>
+                </div>
+                <div class="text-content" data-aos="fade-left">
+                    <h2 class="section-heading" style="text-align: left;">NLP & Topic Modeling</h2>
+                    <ul class="check-list">
+                        <li><strong>Sentiment Scoring:</strong> Classifies complaints as Urgent, Neutral, or Informational.</li>
+                        <li><strong>Topic Extraction:</strong> Automatically groups feedback into 'Traffic', 'Waste', or 'Safety' categories.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="container">
+        <h2 class="section-heading" data-aos="fade-up">Project Deliverables</h2>
+        <div class="deliverables-grid">
+            <div class="deliv-item" data-aos="fade-right">
+                <strong>01. Models</strong>
+                <p>Exported YOLOv8 weights and  ML, DL, NLP, LLM's models for deployment.</p>
+            </div>
+            <div class="deliv-item" data-aos="fade-right" data-aos-delay="100">
+                <strong>02. Dashboard</strong>
+                <p>Interactive User interface with Geographical Map and Analytics visualization.</p>
+            </div>
+            <div class="deliv-item" data-aos="fade-right" data-aos-delay="200">
+                <strong>03. RAG Agents</strong>
+                <p>Functional Python scripts for Database, Email, and Report Agents.</p>
+            </div>
+        </div>
+    </section>
+    <section class="gradient-section">
+        <div class="container">
+            <h2 class="section-heading" data-aos="fade-up">Intelligence Data Sources</h2>
+            <div class="grid">
+                <div class="card" data-aos="fade-right">
+                    <h4>Traffic & Infrastructure</h4>
+                    <p>Leveraging <strong>UTD19</strong> and local CCTV feeds for vehicle counts and pothole detection (Annotated via Roboflow).</p>
+                </div>
+                <div class="card" data-aos="fade-up">
+                    <h4>Environmental Data</h4>
+                    <p>Hourly pollutant metrics from <strong>AQI India</strong> datasets, tracking PM2.5, PM10, and CO levels.</p>
+                </div>
+                <div class="card" data-aos="fade-left">
+                    <h4>Crowd & Feedback</h4>
+                    <p><strong>JHU-Crowd++</strong> for density modeling and <strong>NLTK Sentiment Model Service Requests</strong> for complaint text analysis.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="container">
+        <h2 class="section-heading" data-aos="fade-up">AI Agent Workflow</h2>
+        <div class="workflow-container">
+            <div class="workflow-step" data-aos="zoom-in" data-aos-delay="100">
+                <div class="step-num">01</div>
+                <h5>Data Ingestion</h5>
+                <p>Streaming data from IoT sensors and vision feeds into AWS S3.</p>
+            </div>
+            <div class="arrow">→</div>
+            <div class="workflow-step" data-aos="zoom-in" data-aos-delay="200">
+                <div class="step-num">02</div>
+                <h5>Inference Engine</h5>
+                <p>YOLOv8 & DL/NLP/LLM's process frames and time-series logs in EC2.</p>
+            </div>
+            <div class="arrow">→</div>
+            <div class="workflow-step" data-aos="zoom-in" data-aos-delay="300">
+                <div class="step-num">03</div>
+                <h5>RAG Orchestration</h5>
+                <p>LLM queries RDS database to generate automated city health reports.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="container">
+        <h2 class="section-heading" data-aos="fade-up">🚀 Business Use Cases</h2>
+        <div class="grid">
+            <div class="card" data-aos="fade-up" data-aos-delay="100">
+                <h3>🚦 Traffic Optimization</h3>
+                <p>Reducing congestion by 20% through predictive modeling and real-time signal adjustments.</p>
+            </div>
+            <div class="card" data-aos="fade-up" data-aos-delay="200">
+                <h3>🚑 Emergency Response</h3>
+                <p>Instant accident detection alerts dispatched to emergency services via automated SES triggers.</p>
+            </div>
+            <div class="card" data-aos="fade-up" data-aos-delay="300">
+                <h3>🛠️ Smart Maintenance</h3>
+                <p>Prioritizing road repairs by analyzing the severity of potholes and damaged streetlights.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="gradient-section">
+        <div class="container">
+            <h2 class="section-heading" data-aos="fade-up">🏗️ System Architecture</h2>
+            <div class="architecture-flow">
+                <div class="flow-item" data-aos="zoom-in">
+                    <div class="flow-icon">📥</div>
+                    <h4>Data Ingestion</h4>
+                    <p>CCTV Feeds & IoT Sensors</p>
+                </div>
+                <div class="flow-connector" data-aos="fade-in">➡</div>
+                <div class="flow-item" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="flow-icon">🧠</div>
+                    <h4>AI Engine</h4>
+                    <p>YOLOv8 & AI/ML/DL Inference</p>
+                </div>
+                <div class="flow-connector" data-aos="fade-in" data-aos-delay="150">➡</div>
+                <div class="flow-item" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="flow-icon">📊</div>
+                    <h4>Insights And AWS</h4>
+                    <p>RAG Agent, Analytics Dashboard, EmailAlerts & Store in AWS(S3,RDS)</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="container" style="overflow: hidden; padding: 60px 0;">
+        <div class="tech-stack-label" style="text-align:center; margin-bottom:30px; color:var(--text-muted); font-weight:600;">POWERED BY</div>
+        <div class="tech-tags-wrapper">
+            <span class="skill-tag">🐍 Python</span>
+            <span class="skill-tag">📈 Pandas</span>
+            <span class="skill-tag">📊 NLP</span>
+            <span class="skill-tag">🔥 TensorFlow</span>
+            <span class="skill-tag">🤖Multi AI Agents</span>
+            <span class="skill-tag">🦿GPT-OSS LLM</span>
+            <span class="skill-tag">🦜 PhiData</span>
+            <span class="skill-tag">🛠️ YOLOv8n</span>
+            <span class="skill-tag">☁️ AWS RDS</span>
+        </div>
+    </section>
+
+    <footer class="modern-footer">
+    <div class="footer-container">
+        <div class="footer-content-row">
+            <div class="footer-col brand-info">
+                <div class="footer-logo-centered">UrbanBot<span>.AI</span></div>
+                <p class="footer-description">
+                    Empowering smart cities with real-time AI-driven traffic, Accident, Infrastructure and crowd insights for a safer, smoother urban experience.
+                </p>
+                <div class="footer-socials">
+                    <a href="#">🌐</a>
+                    <a href="#">🐦</a>
+                    <a href="#">💼</a>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h4 class="footer-label">Services</h4>
+                <ul class="footer-nav">
+                    <li><a href="#">Analysis (Traffic,Accident,Infrastructure)</a></li>
+                    <li><a href="#">Emergency Alerts</a></li>
+                    <li><a href="#">Crowd Monitoring</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4 class="footer-label">Support</h4>
+                <ul class="footer-nav">
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">System Status</a></li>
+                    <li><a href="#">API Reference</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom-bar">
+            <div class="copyright">
+                © 2026 UrbanBot Intelligence. All Rights Reserved.
+            </div>
+            <div class="dev-credits">
+                Built with <span class="heart"> ❤ </span> by <strong> 91jeevanick@gmail.com</strong>
+            </div>
+        </div>
+    </div>
+</footer>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 1000,
+            offset: 100,
+            once: false,
+        });
+    </script>
+</body>
+</html>
