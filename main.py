@@ -20,6 +20,7 @@ from phi.model.groq import Groq
 from phi.tools.sql import SQLTools
 from phi.tools.email import EmailTools
 import markdown
+from download_models import download_urbanbot_models
 
 # Load environment variables
 load_dotenv()
@@ -32,11 +33,52 @@ UPLOAD_FOLDER = 'static/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-# Load Model
-traffic_model = YOLO(r'C:\Users\LOQ\Documents\GUVI DS\Mini-Project\Urban Bot Intelligence F06\Models\Traffic Model\best.pt')
-accident_model = YOLO(r'C:\Users\LOQ\Documents\GUVI DS\Mini-Project\Urban Bot Intelligence F06\Models\Accident Model\best.pt')
-pothole_model = YOLO(r'C:\Users\LOQ\Documents\GUVI DS\Mini-Project\Urban Bot Intelligence F06\Models\Pothole Model\best.pt')
-crowd_model = YOLO(r'C:\Users\LOQ\Documents\GUVI DS\Mini-Project\Urban Bot Intelligence F06\Models\Crowd Model\best.pt')
+
+# --- GLOBAL MODEL DICTIONARY ---
+# Loading all 6 into a dictionary for clean access
+intelligence_engines = {}
+
+def bootstrap_intelligence():
+    """Ensures all 6 models are downloaded and loaded into memory."""
+    
+    # 1. Trigger the S3 sync (Downloads only if files are missing)
+    print("🛰️ Syncing Intelligence Engines from S3...")
+    download_urbanbot_models()
+    
+    # 2. Map of Model Names to Local Paths
+    model_map = {
+        'traffic_model': 'models/traffic.pt',
+        'crowd_model': 'models/crowd.pt',
+        'accident_model': 'models/accident.pt',
+        'pothole_model': 'models/pothole.pt',
+        'model': 'models/AQI_Model.pkl',
+        'scaler': 'models/AQI_scaler.pkl'
+    }
+
+    # 3. Load YOLO models
+    try:
+        for name in ['traffic_model', 'crowd_model', 'accident_model', 'pothole_model']:
+            intelligence_engines[name] = YOLO(model_map[name])
+            print(f"✅ Loaded YOLO: {name}")
+
+        # 4. Load Pickle models (LSTM/NLP)
+        for name in ['model', 'scaler']:
+            with open(model_map[name], 'rb') as f:
+                intelligence_engines[name] = pickle.load(f)
+            print(f"✅ Loaded Pickle: {name}")
+            
+    except Exception as e:
+        print(f"❌ Critical Error Loading Models: {e}")
+
+# --- INITIALIZE BEFORE STARTUP ---
+bootstrap_intelligence()
+
+
+# local Load Model
+# traffic_model = YOLO(r'C:\Users\LOQ\Documents\GUVI DS\Mini-Project\Urban Bot Intelligence F06\Models\Traffic Model\best.pt')
+# accident_model = YOLO(r'C:\Users\LOQ\Documents\GUVI DS\Mini-Project\Urban Bot Intelligence F06\Models\Accident Model\best.pt')
+# pothole_model = YOLO(r'C:\Users\LOQ\Documents\GUVI DS\Mini-Project\Urban Bot Intelligence F06\Models\Pothole Model\best.pt')
+# crowd_model = YOLO(r'C:\Users\LOQ\Documents\GUVI DS\Mini-Project\Urban Bot Intelligence F06\Models\Crowd Model\best.pt')
 
 # Weights
 traffic_weights = {
@@ -408,6 +450,11 @@ def traffic():
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
             file.save(filepath)
 
+            #---------------------------------------------------------------------------------------------
+            # model from s3
+            traffic_model = intelligence_engines.get('traffic_model')
+            #--------------------------------------------------------------------------------------------- 
+            
             # YOLO Prediction
             results = traffic_model.predict(source=filepath, conf=0.35)
             frame_score = sum([traffic_weights.get(traffic_model.names[int(b.cls[0])], 1.0) for b in results[0].boxes])
@@ -467,6 +514,11 @@ def accident():
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
             file.save(filepath)
 
+            #---------------------------------------------------------------------------------------------
+            # model from s3
+            accident_model = intelligence_engines.get('accident_model')
+            #---------------------------------------------------------------------------------------------  
+            
             # YOLO Prediction
             results = accident_model.predict(source=filepath, conf=0.35)
             frame_score = sum([accident_weights.get(accident_model.names[int(b.cls[0])], 1.0) for b in results[0].boxes])
@@ -523,6 +575,10 @@ def pothole():
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
             file.save(filepath)
 
+            #---------------------------------------------------------------------------------------------
+            # model from s3
+            pothole_model = intelligence_engines.get('pothole_model')
+            #---------------------------------------------------------------------------------------------  
             # YOLO Prediction
             results = pothole_model.predict(source=filepath, conf=0.35)
             frame_score = sum([pothole_weights.get(pothole_model.names[int(b.cls[0])], 1.0) for b in results[0].boxes])
@@ -581,6 +637,11 @@ def crowd():
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
             file.save(filepath)
 
+            #---------------------------------------------------------------------------------------------
+            # model from s3
+            crowd_model = intelligence_engines.get('crowd_model')
+            #---------------------------------------------------------------------------------------------                                                                                                     
+
             # YOLO Prediction
             results = crowd_model.predict(source=filepath, conf=0.35)
             frame_score = sum([crowd_weights.get(crowd_model.names[int(b.cls[0])], 1.0) for b in results[0].boxes])
@@ -625,11 +686,11 @@ def crowd():
 #------------------------------------------------------------------------------------------------------------------
 #AIR QUALITY ROUTE
 
-# Load AQI Model and Scaler
-with open(r'C:\Users\LOQ\Documents\GUVI DS\Mini-Project\Urban Bot Intelligence F06\Models\AQI Model\AQI_Model.pkl', 'rb') as f:
-    model = pickle.load(f)
-with open(r'C:\Users\LOQ\Documents\GUVI DS\Mini-Project\Urban Bot Intelligence F06\Models\AQI Model\AQI_scaler.pkl', 'rb') as f: # Assuming you saved your scaler too
-    scaler = pickle.load(f)
+# Local Load AQI Model and Scaler
+# with open(r'C:\Users\LOQ\Documents\GUVI DS\Mini-Project\Urban Bot Intelligence F06\Models\AQI Model\AQI_Model.pkl', 'rb') as f:
+#     model = pickle.load(f)
+# with open(r'C:\Users\LOQ\Documents\GUVI DS\Mini-Project\Urban Bot Intelligence F06\Models\AQI Model\AQI_scaler.pkl', 'rb') as f: # Assuming you saved your scaler too
+#     scaler = pickle.load(f)
 
 def get_aqi_category(aqi_value):
     if aqi_value <= 50: return "GOOD", "#28a745"
@@ -667,9 +728,17 @@ def air_quality():
         features = pd.DataFrame([[input_data['PM25'], input_data['PM10'], input_data['NO'], 
                                  input_data['NO2'], input_data['NOx'], input_data['NH3'], 
                                  input_data['CO'], input_data['SO2'], input_data['O3']]])
+        
+        #--------------------------------------------------------------------------------------
+        #its get model from s3
+        scaler = intelligence_engines.get('scaler')
+        model = intelligence_engines.get('model')
+        #--------------------------------------------------------------------------------------
+        
         scaled_data = scaler.transform(features)
         prediction = round(model.predict(scaled_data)[0], 2)
         status, status_color = get_aqi_category(prediction)
+
 
         # Log to RDS
         try:
@@ -1148,6 +1217,10 @@ def about_me():
     return render_template('about me.html')
 
 
+# if __name__ == '__main__':
+#     app.run(debug=True)
+
+#Running on Port 5000
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)
 
