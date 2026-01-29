@@ -40,7 +40,7 @@ intelligence_engines = {}
 
 def bootstrap_intelligence():
     """Ensures all 6 models are downloaded and loaded into memory."""
-    
+    global intelligence_engines
     # 1. Trigger the S3 sync (Downloads only if files are missing)
     print("🛰️ Syncing Intelligence Engines from S3...")
     download_urbanbot_models()
@@ -72,6 +72,7 @@ def bootstrap_intelligence():
 
 # --- INITIALIZE BEFORE STARTUP ---
 bootstrap_intelligence()
+
 
 
 # local Load Model
@@ -1223,4 +1224,5 @@ def about_me():
 #Running on Port 5000
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
+
 
