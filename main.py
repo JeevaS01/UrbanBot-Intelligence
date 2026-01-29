@@ -895,7 +895,7 @@ def send_alert_email(city, category, text):
                     </div>
                     
                     <div style="margin-top: 30px; text-align: center;">
-                        <a href="http://127.0.0.1:5000/citizen_complaint" style="background-color: #4f46e5; color: white; padding: 12px 25px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 14px;">View in Dashboard</a>
+                        <a href="http://65.0.18.179:5000/citizen_complaint" style="background-color: #4f46e5; color: white; padding: 12px 25px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 14px;">View in Dashboard</a>
                     </div>
                 </div>
 
@@ -1224,6 +1224,7 @@ def about_me():
 #Running on Port 5000
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000,debug=True)
+
 
 
 
