@@ -11,7 +11,7 @@ Pillow
 pandas
 numpy
 scikit-learn
-pickle5
+pickle5; python_version < "3.8"
 
 # AWS & Database
 boto3
@@ -23,4 +23,5 @@ phidata
 groq
 
 # Timezone Handling
-backports.zoneinfo
+
+backports.zoneinfo; python_version < "3.9"
