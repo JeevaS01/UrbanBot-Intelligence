@@ -20,7 +20,7 @@ from phi.model.groq import Groq
 from phi.tools.sql import SQLTools
 from phi.tools.email import EmailTools
 import markdown
-from download_models import download_urbanbot_models
+#from download_models import download_urbanbot_models
 
 # Load environment variables
 load_dotenv()
@@ -43,7 +43,7 @@ def bootstrap_intelligence():
     global intelligence_engines
     # 1. Trigger the S3 sync (Downloads only if files are missing)
     print("🛰️ Syncing Intelligence Engines from S3...")
-    download_urbanbot_models()
+    #download_urbanbot_models()
     
     # 2. Map of Model Names to Local Paths
     model_map = {
@@ -1223,6 +1223,7 @@ def about_me():
 
 #Running on Port 5000
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000,debug=True)
+
 
 
