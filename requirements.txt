@@ -17,6 +17,7 @@ pickle5; python_version < "3.8"
 boto3
 PyMySQL
 python-dotenv
+sqlalchemy
 
 # AI Agents & LLM Framework (Phidata)
 phidata
@@ -25,3 +26,4 @@ groq
 # Timezone Handling
 
 backports.zoneinfo; python_version < "3.9"
+
